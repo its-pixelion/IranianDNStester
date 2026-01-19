@@ -1037,7 +1037,16 @@ class _DnsTestPageState extends State<DnsTestPage>
       final shuffled = List<String>.from(filteredServers)..shuffle(Random());
       final selected = shuffled.take(limit).toList();
 
-      final List<DnsResult> initialList = selected
+      // Always add Google and Cloudflare DNS at the beginning for verification
+      const reliableDns = ['8.8.8.8', '8.8.4.4', '1.1.1.1', '1.0.0.1'];
+      final List<String> finalList = [...reliableDns];
+      for (var ip in selected) {
+        if (!reliableDns.contains(ip)) {
+          finalList.add(ip);
+        }
+      }
+
+      final List<DnsResult> initialList = finalList
           .map((ip) => DnsResult(ip: ip))
           .toList();
 
